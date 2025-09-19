@@ -1,0 +1,23 @@
+2025-09-19T11:31:06+02:00 [ERROR] | First line written to file?
+2025-09-19T11:31:06+02:00 [ERROR] | Formatted xd and wrote to file: ./log.txt
+2025-09-19T11:31:06+02:00 [ERROR] | Now printing json
+{
+    "timestamp": "2025-09-19T11:31:06+02:00",
+    "log_level": 1,
+    "message": "First time formatting first as json message: second\n"
+}
+{
+    "timestamp": "2025-09-19T11:31:06+02:00",
+    "log_level": 1,
+    "message": "And a simple line\n"
+}
+{
+    "timestamp": "2025-09-19T11:31:06+02:00",
+    "log_level": 2,
+    "message": "Warning: adsada\n"
+}
+{
+    "timestamp": "2025-09-19T11:31:06+02:00",
+    "log_level": 1,
+    "message": "And lastly, json to STDOUT\n"
+}
