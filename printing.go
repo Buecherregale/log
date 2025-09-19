@@ -29,19 +29,19 @@ func (writer *stdwriter) write(s string) error {
 type Target int
 
 const (
-	FILE	Target = iota
-	STDOUT
+	TARGET_FILE	Target = iota
+	TARGET_STDOUT
 )
 
 func getPrinter(target Target) (printer, error) {
 	switch target {
-	case FILE:
+	case TARGET_FILE:
 		f, err := os.OpenFile(config.Logfile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil {
 			return nil, err 
 		}
 		return &fileWriter{ file: f }, nil
-	case STDOUT:
+	case TARGET_STDOUT:
 		return &stdwriter{}, nil
 	default:
 		return nil, errors.New("unknown target")

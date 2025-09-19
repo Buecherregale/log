@@ -18,8 +18,8 @@ type instances struct {
 var config *LogConfig = &LogConfig{
 	Level: LEVEL_INFO,
 	Timeformat: time.RFC3339,
-	SerializationStrategy: SIMPLE,
-	TargetMode: STDOUT,
+	SerializationStrategy: STRATEGY_SIMPLE,
+	TargetMode: TARGET_STDOUT,
 	Logfile: "",
 } 
 var singletons *instances = &instances{
