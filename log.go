@@ -14,21 +14,21 @@ type LogEntry struct {
 type LogLevel int
 
 const (
-	ERROR	LogLevel = 1
-	WARN	LogLevel = 2
-	INFO  LogLevel = 3
-	DEBUG LogLevel = 4
+	LEVEL_ERROR	LogLevel = 1
+	LEVEL_WARN	LogLevel = 2
+	LEVEL_INFO  LogLevel = 3
+	LEVEL_DEBUG LogLevel = 4
 )
 
 func (level LogLevel) Name() string {
 	switch level {
-	case ERROR:
+	case LEVEL_ERROR:
 		return "ERROR"
-	case WARN:
+	case LEVEL_WARN:
 		return "WARN"
-	case INFO:
+	case LEVEL_INFO:
 		return "INFO"
-	case DEBUG:
+	case LEVEL_DEBUG:
 		return "DEBUG"
 	}
 	return "UNKNOWN"
@@ -97,36 +97,36 @@ func SLogln(level LogLevel, args... any) string {
 }
 
 func Fatalf(message string, args... any) {
-	panic(SLogf(ERROR, message, args...))
+	panic(SLogf(LEVEL_ERROR, message, args...))
 }
 func Fatalln(args... any) {
-	panic(SLogln(ERROR, args...))
+	panic(SLogln(LEVEL_ERROR, args...))
 }
 func Fatal(err error) {
-	panic(SLogf(ERROR, "%v\n", err)) 
+	panic(SLogf(LEVEL_ERROR, "%v\n", err)) 
 }
 func Errorf(message string, args... any) {
-	Logf(ERROR, message, args...)
+	Logf(LEVEL_ERROR, message, args...)
 }
 func Errorln(args... any) {
-	Logln(ERROR, args...)
+	Logln(LEVEL_ERROR, args...)
 }
 func Warnf(message string, args... any) {
-	Logf(WARN, message, args...)
+	Logf(LEVEL_WARN, message, args...)
 }
 func Warnln(args... any) {
-	Logln(WARN, args...)
+	Logln(LEVEL_WARN, args...)
 }
 func Infof(message string, args... any) {
-	Logf(INFO, message, args...)
+	Logf(LEVEL_INFO, message, args...)
 }
 func Infoln(args... any) {
-	Logln(INFO, args...)
+	Logln(LEVEL_INFO, args...)
 }
 func Debugf(message string, args... any) {
-	Logf(DEBUG, message, args...)
+	Logf(LEVEL_DEBUG, message, args...)
 }
 func Debugln(args... any) {
-	Logln(DEBUG, args...)
+	Logln(LEVEL_DEBUG, args...)
 }
 

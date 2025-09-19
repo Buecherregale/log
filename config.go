@@ -16,7 +16,7 @@ type instances struct {
 }
 
 var config *LogConfig = &LogConfig{
-	Level: INFO,
+	Level: LEVEL_INFO,
 	Timeformat: time.RFC3339,
 	SerializationStrategy: SIMPLE,
 	TargetMode: STDOUT,
