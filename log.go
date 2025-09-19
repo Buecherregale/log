@@ -60,6 +60,16 @@ func Logf(level LogLevel, message string, args... any) {
 		panic(err)
 	}
 }
+func Logln(level LogLevel, args... any) {
+	if level > config.Level {
+		return
+	}
+	s := SLogln(level, args...)
+	err := singletons.printer.write(s)
+	if err != nil {
+		panic(err)
+	}
+}
 
 func SLogf(level LogLevel, message string, args... any) string {
 	entry := LogEntry {
@@ -73,37 +83,50 @@ func SLogf(level LogLevel, message string, args... any) string {
 	}
 	return s
 }
-func Logln(level LogLevel, message string) {
-	Logf(level, message + "\n")
+func SLogln(level LogLevel, args... any) string {
+	entry := LogEntry {
+		Timestamp: time.Now().Local().Format(config.Timeformat),
+		Level: level,
+		Message: fmt.Sprintln(args...),
+	}
+	s, err := singletons.serializer.serialize(entry)
+	if err != nil {
+		panic(fmt.Sprintf("could not serialize log entry: %v\n", err))
+	}
+	return s
 }
+
 func Fatalf(message string, args... any) {
 	panic(SLogf(ERROR, message, args...))
 }
-func Fatalln(message string) {
-	panic(SLogf(ERROR, message + "\n"))
+func Fatalln(args... any) {
+	panic(SLogln(ERROR, args...))
+}
+func Fatal(err error) {
+	panic(SLogf(ERROR, "%v\n", err)) 
 }
 func Errorf(message string, args... any) {
 	Logf(ERROR, message, args...)
 }
-func Errorln(message string) {
-	Logln(ERROR, message)
+func Errorln(args... any) {
+	Logln(ERROR, args...)
 }
 func Warnf(message string, args... any) {
 	Logf(WARN, message, args...)
 }
-func Warnln(message string) {
-	Logln(WARN, message)
+func Warnln(args... any) {
+	Logln(WARN, args...)
 }
 func Infof(message string, args... any) {
 	Logf(INFO, message, args...)
 }
-func Infoln(message string) {
-	Logln(INFO, message)
+func Infoln(args... any) {
+	Logln(INFO, args...)
 }
 func Debugf(message string, args... any) {
 	Logf(DEBUG, message, args...)
 }
-func Debugln(message string) {
-	Logln(DEBUG, message)
+func Debugln(args... any) {
+	Logln(DEBUG, args...)
 }
 
