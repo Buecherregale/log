@@ -22,7 +22,7 @@ func (writer *fileWriter) write(s string) error {
 type stdwriter struct {}
 
 func (writer *stdwriter) write(s string) error {
-	fmt.Print(s)
+	fmt.Fprint(os.Stdout, s)
 	return nil
 }
 
