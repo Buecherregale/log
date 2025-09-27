@@ -23,6 +23,14 @@ A note on the additional configuration:
 
 `Timeformat` is a string to be used with stds `time.Format()` method. For ease of use utilize the `time.RFC...` standards.
 
+### Environment
+Controlling the logging level and target file via environment variables is supported. 
+They will automatically be read during the `log.Init()` call. 
+The variables are: 
+- `GO_LOG_LEVEL`: Expecting the `Name()` of the level, e.g. `DEBUG` (Case-Insensitive)
+- `GO_LOG_FILE`: Expecting the path to the file
+Setting level or file in the code configuration will overwrite the environment values.
+
 ### Default
 Without calling `Init()` a standard configuration is used:
 ```golang

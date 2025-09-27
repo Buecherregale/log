@@ -2,6 +2,8 @@ package log
 
 import (
 	"fmt"
+	"os"
+	"strings"
 	"time"
 )
 
@@ -34,8 +36,33 @@ func (level LogLevel) Name() string {
 	return "UNKNOWN"
 }
 
+func ParseLevel(lvl string) LogLevel {
+	upper := strings.ToUpper(lvl)
+	switch upper {
+	case "ERROR":
+		return LEVEL_ERROR
+	case "WARN":
+		return LEVEL_WARN
+	case "INFO":
+		return LEVEL_INFO
+	case "DEBUG":
+		return LEVEL_DEBUG
+	}
+	return -1
+}
+
 func Init(logConfig LogConfig) {
 	config = &logConfig
+
+	file, set := os.LookupEnv("GO_LOG_FILE")
+	if set {
+		config.Logfile = file 
+	}
+	level, set := os.LookupEnv("GO_LOG_LEVEL")
+	if set {
+		config.Level = ParseLevel(level)
+	}
+
 	printer, err := getPrinter(logConfig.TargetMode)
 	if err != nil {
 		panic(err)
