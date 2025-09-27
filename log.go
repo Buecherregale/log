@@ -54,7 +54,6 @@ func Init() {
 	configureGlobalState(buildDefaultConfig())
 }
 func Configure(config LogConfig) {
-	Init() // read env
 	configureGlobalState(&config)
 }
 
