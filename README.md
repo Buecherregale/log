@@ -4,7 +4,7 @@ This module aims at delivering an improved experience from the std::log module.
 ## Usage
 Import the go modue:
 ```golang
-import github.com/buecherregale/log
+import github.com/Buecherregale/log
 ``` 
 Initialize the logging module:
 ```golang
