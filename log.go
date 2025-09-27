@@ -2,7 +2,6 @@ package log
 
 import (
 	"fmt"
-	"os"
 	"strings"
 	"time"
 )
@@ -36,7 +35,7 @@ func (level LogLevel) Name() string {
 	return "UNKNOWN"
 }
 
-func ParseLevel(lvl string) LogLevel {
+func parseLevel(lvl string) LogLevel {
 	upper := strings.ToUpper(lvl)
 	switch upper {
 	case "ERROR":
@@ -51,48 +50,30 @@ func ParseLevel(lvl string) LogLevel {
 	return -1
 }
 
-func Init(logConfig LogConfig) {
-	config = &logConfig
-
-	file, set := os.LookupEnv("GO_LOG_FILE")
-	if set {
-		config.Logfile = file 
-	}
-	level, set := os.LookupEnv("GO_LOG_LEVEL")
-	if set {
-		config.Level = ParseLevel(level)
-	}
-
-	printer, err := getPrinter(logConfig.TargetMode)
-	if err != nil {
-		panic(err)
-	}
-	serializer, err := getSerializer(logConfig.SerializationStrategy)
-	if err != nil {
-		panic(err)
-	}
-	singletons = &instances{
-		printer: printer,
-		serializer: serializer,
-	}
+func Init() {
+	configureGlobalState(buildDefaultConfig())
+}
+func Configure(config LogConfig) {
+	Init() // read env
+	configureGlobalState(&config)
 }
 
 func Logf(level LogLevel, message string, args... any) {
-	if level > config.Level {
+	if level > activeConfig.Level {
 		return
 	}
 	s := SLogf(level, message, args...)
-	err := singletons.printer.write(s)
+	err := activePrinter.write(s)
 	if err != nil {
 		panic(err)
 	}
 }
 func Logln(level LogLevel, args... any) {
-	if level > config.Level {
+	if level > activeConfig.Level {
 		return
 	}
 	s := SLogln(level, args...)
-	err := singletons.printer.write(s)
+	err := activePrinter.write(s)
 	if err != nil {
 		panic(err)
 	}
@@ -100,11 +81,11 @@ func Logln(level LogLevel, args... any) {
 
 func SLogf(level LogLevel, message string, args... any) string {
 	entry := LogEntry {
-		Timestamp: time.Now().Local().Format(config.Timeformat),
+		Timestamp: time.Now().Local().Format(activeConfig.Timeformat),
 		Level: level,
 		Message: fmt.Sprintf(message, args...),
 	}
-	s, err := singletons.serializer.serialize(entry)
+	s, err := activeSerializer.serialize(entry)
 	if err != nil {
 		panic(fmt.Sprintf("could not serialize log entry: %v\n", err))
 	}
@@ -112,11 +93,11 @@ func SLogf(level LogLevel, message string, args... any) string {
 }
 func SLogln(level LogLevel, args... any) string {
 	entry := LogEntry {
-		Timestamp: time.Now().Local().Format(config.Timeformat),
+		Timestamp: time.Now().Local().Format(activeConfig.Timeformat),
 		Level: level,
 		Message: fmt.Sprintln(args...),
 	}
-	s, err := singletons.serializer.serialize(entry)
+	s, err := activeSerializer.serialize(entry)
 	if err != nil {
 		panic(fmt.Sprintf("could not serialize log entry: %v\n", err))
 	}

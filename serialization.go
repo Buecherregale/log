@@ -9,8 +9,8 @@ import (
 type SerilizationStrategy int
 
 const (
-	STRATEGY_JSON		SerilizationStrategy = 1 // if used with Target = FILE the resulting file will NOT be valid json. 
-	STRATEGY_SIMPLE	SerilizationStrategy = 2
+	SERIALIZATION_JSON		SerilizationStrategy = 1 // if used with Target = FILE the resulting file will NOT be valid json. 
+	SERIALIZATION_SIMPLE	SerilizationStrategy = 2
 )
 
 type serializer interface {
@@ -35,11 +35,11 @@ func (serializer *simpleSerializer) serialize(entry LogEntry) (string, error) {
 	return fmt.Sprintf(simple_formatting, entry.Timestamp, entry.Level.Name(), entry.Message), nil
 }
 
-func getSerializer(strategy SerilizationStrategy) (serializer, error) {
+func parseSerializer(strategy SerilizationStrategy) (serializer, error) {
 	switch strategy {
-	case STRATEGY_JSON:
+	case SERIALIZATION_JSON:
 		return &jsonSerializer{}, nil
-	case STRATEGY_SIMPLE:
+	case SERIALIZATION_SIMPLE:
 		return &simpleSerializer{}, nil
 	default:
 		return nil, errors.New("unknown serialization strategy")
